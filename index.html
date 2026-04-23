@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator with Error Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a66c2;
+            --primary-dark: #054399;
+            --secondary: #ff6b35;
+            --accent: #f7b801;
+            --success: #06a77d;
+            --danger: #d62828;
+            --bg-dark: #0f1419;
+            --bg-light: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border: #e0e0e0;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #ff5722;
+        }
+
+        .btn-tab {
+            background: var(--border);
+            color: var(--text-primary);
+            border: 2px solid transparent;
+            padding: 10px 20px;
+            margin: 5px;
+        }
+
+        .btn-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .result-box {
+            background: #f0f4f8;
+            border-left: 4px solid var(--success);
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .result-box.error {
+            border-left-color: var(--danger);
+            background: #fee;
+        }
+
+        .result-box h3 {
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+
+        .result-box.error h3 {
+            color: var(--danger);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .error-text {
+            color: var(--danger);
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .success-text {
+            color: var(--success);
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 10px 0;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .formula-box {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .multi-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .multi-input {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .btn-tab {
+            margin-bottom: -2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 Scientific Calculator</h1>
+            <p>Error Analysis & Numerical Methods for Computational Efficiency</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Basic Calculator Card -->
+            <div class="card">
+                <h2>📊 Basic Calculations</h2>
+                <div class="form-group">
+                    <label>Enter Expression:</label>
+                    <textarea id="expression" placeholder="e.g., sin(pi/4) + 2*sqrt(9)" rows="3"></textarea>
+                    <div class="info-box">
+                        Functions: sin, cos, tan, exp, log, sqrt, factorial | Constants: pi, e
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="basicCalculate()">Calculate</button>
+                <div id="basicResult"></div>
+            </div>
+
+            <!-- Error Analysis Card -->
+            <div class="card">
+                <h2>⚠️ Error Analysis</h2>
+                <div class="form-group">
+                    <label>Analysis Type:</label>
+                    <select id="errorType" onchange="updateErrorForm()">
+                        <option value="absolute_error">Absolute Error</option>
+                        <option value="relative_error">Relative Error</option>
+                        <option value="percentage_error">Percentage Error</option>
+                        <option value="round_off_error">Round-off Error</option>
+                        <option value="propagation_error">Error Propagation</option>
+                    </select>
+                </div>
+                <div id="errorInputs"></div>
+                <button class="btn btn-primary" onclick="calculateError()">Analyze Error</button>
+                <div id="errorResult"></div>
+            </div>
+
+            <!-- Root Finding Methods -->
+            <div class="card full-width">
+                <h2>🔍 Root Finding Methods</h2>
+                <div class="tab-buttons">
+                    <button class="btn-tab active" onclick="switchTab('bisection')">Bisection</button>
+                    <button class="btn-tab" onclick="switchTab('newton')">Newton-Raphson</button>
+                    <button class="btn-tab" onclick="switchTab('falsepos')">False Position</button>
+                </div>
+
+                <!-- Bisection Tab -->
+                <div id="bisection" class="tab-content active">
+                    <div class="form-group">
+                        <label>Function f(x):</label>
+                        <input type="text" id="bisFunc" placeholder="e.g., x**3 - 4*x + 1" value="x**3 - 4*x + 1">
+                    </div>
+                    <div class="multi-input">
+                        <div class="form-group">
+                            <label>Lower Bound (a):</label>
+                            <input type="number" id="bisA" value="0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Upper Bound (b):</label>
+                            <input type="number" id="bisB" value="2" step="0.1">
+                        </div>
+                    </div>
+                    <div class="multi-input">
+                        <div class="form-group">
+                            <label>Tolerance:</label>
+                            <input type="number" id="bisTol" value="0.00001" step="0.0001">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Iterations:</label>
+                            <input type="number" id="bisIter" value="100" step="10">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="runBisection()">Find Root (Bisection)</button>
+                    <div id="bisectionResult"></div>
+                </div>
+
+                <!-- Newton-Raphson Tab -->
+                <div id="newton" class="tab-content">
+                    <div class="form-group">
+                        <label>Function f(x):</label>
+                        <input type="text" id="nrFunc" placeholder="e.g., x**2 - 2" value="x**2 - 2">
+                    </div>
+                    <div class="form-group">
+                        <label>Derivative f'(x):</label>
+                        <input type="text" id="nrDeriv" placeholder="e.g., 2*x" value="2*x">
+                    </div>
+                    <div class="multi-input">
+                        <div class="form-group">
+                            <label>Initial Guess (x₀):</label>
+                            <input type="number" id="nrX0" value="1" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Tolerance:</label>
+                            <input type="number" id="nrTol" value="0.00001" step="0.0001">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Iterations:</label>
+                        <input type="number" id="nrIter" value="100" step="10">
+                    </div>
+                    <button class="btn btn-primary" onclick="runNewtonRaphson()">Find Root (Newton-Raphson)</button>
+                    <div id="newtonResult"></div>
+                </div>
+
+                <!-- False Position Tab -->
+                <div id="falsepos" class="tab-content">
+                    <div class="form-group">
+                        <label>Function f(x):</label>
+                        <input type="text" id="fpFunc" placeholder="e.g., x**3 - 4*x + 1" value="x**3 - 4*x + 1">
+                    </div>
+                    <div class="multi-input">
+                        <div class="form-group">
+                            <label>Lower Bound (a):</label>
+                            <input type="number" id="fpA" value="0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Upper Bound (b):</label>
+                            <input type="number" id="fpB" value="2" step="0.1">
+                        </div>
+                    </div>
+                    <div class="multi-input">
+                        <div class="form-group">
+                            <label>Tolerance:</label>
+                            <input type="number" id="fpTol" value="0.00001" step="0.0001">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Iterations:</label>
+                            <input type="number" id="fpIter" value="100" step="10">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="runFalsePosition()">Find Root (False Position)</button>
+                    <div id="falseposResult"></div>
+                </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="card full-width">
+                <h2>📚 Help & Documentation</h2>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <div>
+                        <h4 style="color: var(--primary); margin-bottom: 10px;">Supported Functions:</h4>
+                        <p style="font-family: monospace; font-size: 0.9em; line-height: 1.8;">
+                            sin, cos, tan, asin, acos, atan<br>
+                            sinh, cosh, tanh<br>
+                            exp, log, log10, sqrt<br>
+                            abs, factorial<br>
+                            degrees, radians
+                        </p>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--primary); margin-bottom: 10px;">Methods Explanation:</h4>
+                        <p style="font-size: 0.9em; line-height: 1.8;">
+                            <strong>Bisection:</strong> Brackets the root, slower but reliable<br>
+                            <strong>Newton-Raphson:</strong> Fast quadratic convergence, needs derivative<br>
+                            <strong>False Position:</strong> Better than bisection, uses secant line
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        function basicCalculate() {
+            const expression = document.getElementById('expression').value.trim();
+            if (!expression) {
+                showError('basicResult', 'Please enter an expression');
+                return;
+            }
+
+            showLoader('basicResult');
+            fetch(`${API_BASE}/calculate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ expression })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccess('basicResult', `Result: <strong>${data.result}</strong>`);
+                } else {
+                    showError('basicResult', data.error);
+                }
+            })
+            .catch(e => showError('basicResult', e.message));
+        }
+
+        function updateErrorForm() {
+            const type = document.getElementById('errorType').value;
+            let html = '';
+
+            if (type === 'propagation_error') {
+                html = `
+                    <div class="form-group">
+                        <label>Partial Derivatives (comma-separated):</label>
+                        <input type="text" id="pdInput" placeholder="e.g., 2, 3, -1">
+                    </div>
+                    <div class="form-group">
+                        <label>Uncertainties (comma-separated):</label>
+                        <input type="text" id="uncInput" placeholder="e.g., 0.1, 0.05, 0.02">
+                    </div>
+                `;
+            } else if (type === 'round_off_error') {
+                html = `
+                    <div class="multi-input">
+                        <div class="form-group">
+                            <label>Original Value:</label>
+                            <input type="number" id="roValue" placeholder="e.g., 3.14159" step="any">
+                        </div>
+                        <div class="form-group">
+                            <label>Decimal Places:</label>
+                            <input type="number" id="roDecimal" value="2" min="0">
+                        </div>
+                    </div>
+                `;
+            } else {
+                html = `
+                    <div class="multi-input">
+                        <div class="form-group">
+                            <label>True Value:</label>
+                            <input type="number" id="trueVal" placeholder="e.g., 3.14159" step="any">
+                        </div>
+                        <div class="form-group">
+                            <label>Approximate Value:</label>
+                            <input type="number" id="approxVal" placeholder="e.g., 3.14" step="any">
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('errorInputs').innerHTML = html;
+        }
+
+        function calculateError() {
+            const type = document.getElementById('errorType').value;
+            let payload = { type };
+
+            if (type === 'propagation_error') {
+                const pd = document.getElementById('pdInput').value.split(',').map(x => parseFloat(x.trim()));
+                const unc = document.getElementById('uncInput').value.split(',').map(x => parseFloat(x.trim()));
+                
+                if (pd.some(isNaN) || unc.some(isNaN) || pd.length !== unc.length) {
+                    showError('errorResult', 'Invalid input format');
+                    return;
+                }
+                
+                payload.partial_derivatives = pd;
+                payload.uncertainties = unc;
+            } else if (type === 'round_off_error') {
+                const val = parseFloat(document.getElementById('roValue').value);
+                const dec = parseInt(document.getElementById('roDecimal').value);
+                
+                if (isNaN(val) || isNaN(dec)) {
+                    showError('errorResult', 'Invalid input');
+                    return;
+                }
+                
+                payload.value = val;
+                payload.decimal_places = dec;
+            } else {
+                const trueVal = parseFloat(document.getElementById('trueVal').value);
+                const approxVal = parseFloat(document.getElementById('approxVal').value);
+                
+                if (isNaN(trueVal) || isNaN(approxVal)) {
+                    showError('errorResult', 'Invalid input');
+                    return;
+                }
+                
+                payload.true_value = trueVal;
+                payload.approximate_value = approxVal;
+            }
+
+            showLoader('errorResult');
+            fetch(`${API_BASE}/error-analysis`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    let html = `
+                        <div class="result-box">
+                            <h3>${type.replace(/_/g, ' ').toUpperCase()}</h3>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-label">Error Value</div>
+                                    <div class="stat-value">${data.error !== null ? data.error.toExponential(6) : 'N/A'}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Formula</div>
+                                    <div style="font-size: 0.85em; font-family: monospace;">${data.formula}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('errorResult').innerHTML = html;
+                } else {
+                    showError('errorResult', data.error);
+                }
+            })
+            .catch(e => showError('errorResult', e.message));
+        }
+
+        function runBisection() {
+            const func = document.getElementById('bisFunc').value.trim();
+            const a = parseFloat(document.getElementById('bisA').value);
+            const b = parseFloat(document.getElementById('bisB').value);
+            const tol = parseFloat(document.getElementById('bisTol').value);
+            const iter = parseInt(document.getElementById('bisIter').value);
+
+            if (!func || isNaN(a) || isNaN(b)) {
+                showError('bisectionResult', 'Invalid input');
+                return;
+            }
+
+            showLoader('bisectionResult');
+            fetch(`${API_BASE}/bisection`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ function: func, a, b, tolerance: tol, max_iterations: iter })
+            })
+            .then(r => r.json())
+            .then(data => displayMethodResults(data, 'bisectionResult'))
+            .catch(e => showError('bisectionResult', e.message));
+        }
+
+        function runNewtonRaphson() {
+            const func = document.getElementById('nrFunc').value.trim();
+            const deriv = document.getElementById('nrDeriv').value.trim();
+            const x0 = parseFloat(document.getElementById('nrX0').value);
+            const tol = parseFloat(document.getElementById('nrTol').value);
+            const iter = parseInt(document.getElementById('nrIter').value);
+
+            if (!func || !deriv || isNaN(x0)) {
+                showError('newtonResult', 'Invalid input');
+                return;
+            }
+
+            showLoader('newtonResult');
+            fetch(`${API_BASE}/newton-raphson`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ function: func, derivative: deriv, x0, tolerance: tol, max_iterations: iter })
+            })
+            .then(r => r.json())
+            .then(data => displayMethodResults(data, 'newtonResult'))
+            .catch(e => showError('newtonResult', e.message));
+        }
+
+        function runFalsePosition() {
+            const func = document.getElementById('fpFunc').value.trim();
+            const a = parseFloat(document.getElementById('fpA').value);
+            const b = parseFloat(document.getElementById('fpB').value);
+            const tol = parseFloat(document.getElementById('fpTol').value);
+            const iter = parseInt(document.getElementById('fpIter').value);
+
+            if (!func || isNaN(a) || isNaN(b)) {
+                showError('falseposResult', 'Invalid input');
+                return;
+            }
+
+            showLoader('falseposResult');
+            fetch(`${API_BASE}/false-position`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ function: func, a, b, tolerance: tol, max_iterations: iter })
+            })
+            .then(r => r.json())
+            .then(data => displayMethodResults(data, 'falseposResult'))
+            .catch(e => showError('falseposResult', e.message));
+        }
+
+        function displayMethodResults(data, elementId) {
+            if (data.error) {
+                showError(elementId, data.error);
+                return;
+            }
+
+            let html = '<div class="result-box">';
+            const results = data.results;
+
+            if (results && results.length > 0) {
+                const lastResult = results[results.length - 1];
+                
+                if (lastResult.root) {
+                    html += `
+                        <h3>✓ Root Found</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-label">Root (x)</div>
+                                <div class="stat-value">${lastResult.root}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Iterations</div>
+                                <div class="stat-value">${lastResult.iterations}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Final Error</div>
+                                <div class="stat-value">${lastResult.final_error ? lastResult.final_error.toExponential(4) : 'N/A'}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">f(x)</div>
+                                <div class="stat-value">${lastResult.function_value ? lastResult.function_value.toExponential(4) : 'N/A'}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Show iteration table
+                const iterResults = results.filter(r => r.iteration);
+                if (iterResults.length > 0) {
+                    html += '<h4 style="margin-top: 20px; color: var(--primary);">Iteration Details:</h4>';
+                    html += '<div class="table-responsive"><table>';
+                    html += '<thead><tr>';
+                    Object.keys(iterResults[0]).forEach(key => {
+                        if (key !== 'iteration') html += `<th>${key}</th>`;
+                    });
+                    html += '</tr></thead><tbody>';
+
+                    iterResults.forEach(row => {
+                        html += '<tr>';
+                        Object.entries(row).forEach(([key, val]) => {
+                            if (key !== 'iteration') {
+                                const displayVal = typeof val === 'number' ? val.toExponential(6) : val;
+                                html += `<td>${displayVal}</td>`;
+                            }
+                        });
+                        html += '</tr>';
+                    });
+
+                    html += '</tbody></table></div>';
+                }
+            }
+
+            html += '</div>';
+            document.getElementById(elementId).innerHTML = html;
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showError(elementId, message) {
+            document.getElementById(elementId).innerHTML = `
+                <div class="result-box error">
+                    <h3>❌ Error</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+            document.querySelector(`#${elementId} .loader`).style.display = 'none';
+        }
+
+        function showSuccess(elementId, html) {
+            document.getElementById(elementId).innerHTML = `
+                <div class="result-box">
+                    <h3>✓ Success</h3>
+                    <p>${html}</p>
+                </div>
+            `;
+        }
+
+        function showLoader(elementId) {
+            document.getElementById(elementId).innerHTML = '<div class="loader" style="display: block;"></div>';
+        }
+
+        // Initialize error form
+        updateErrorForm();
+    </script>
+</body>
+</html>
