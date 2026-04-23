@@ -1,283 +1,82 @@
-# Scientific Calculator with Error Analysis
-## Numerical Methods Project for BE CSE 3rd Year
+# Scientific Calculator with Error Analysis and Numerical Methods
 
-### 📋 Project Overview
-This is a web-based scientific calculator with error analysis capabilities, designed to demonstrate numerical methods concepts from your Numerical Methods subject. It combines a Python Flask backend with a responsive HTML/CSS/JavaScript frontend.
+## Overview
+This project is a web-based scientific calculator integrated with error analysis and numerical root-finding methods. It combines standard scientific computations with numerical techniques used in engineering and computational mathematics.
 
-### ✨ Features
-1. **Basic Calculator**: Scientific calculations with standard and advanced functions
-2. **Error Analysis**: 
-   - Absolute Error
-   - Relative Error
-   - Percentage Error
-   - Round-off Error
-   - Error Propagation
+## Features
 
-3. **Numerical Methods**:
-   - Bisection Method (Root Finding)
-   - Newton-Raphson Method (Root Finding)
-   - False Position Method (Root Finding)
+### Scientific Calculator
+Supports advanced mathematical operations such as:
+- Trigonometric functions (sin, cos, tan)
+- Logarithmic and exponential functions
+- Square root
+- Factorial
+- Mathematical constants (π, e)
 
-4. **Beautiful UI**: Modern, responsive design with smooth animations
+Example:
+sin(pi/4) + 2*sqrt(9)
 
 ---
 
-## 🚀 How to Run in VS Code
+## Error Analysis Module
+Performs:
+- Absolute Error
+- Relative Error
+- Percentage Error
+- Error Propagation Analysis
 
-### Prerequisites
-- Python 3.7+ installed
-- VS Code with Python extension
+Uses uncertainty propagation:
 
-### Step-by-Step Setup
+ΔR = √[(∂R/∂x · Δx)² + (∂R/∂y · Δy)²]
 
-#### 1. **Open Project Folder**
-   - Open VS Code
-   - Go to `File → Open Folder`
-   - Select the folder containing these files
-
-#### 2. **Open Terminal in VS Code**
-   - Press `Ctrl + ` (backtick) to open terminal
-   - Or go to `Terminal → New Terminal`
-
-#### 3. **Create Virtual Environment** (Recommended)
-   ```bash
-   # On Windows
-   python -m venv venv
-   venv\Scripts\activate
-   
-   # On macOS/Linux
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-#### 4. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-#### 5. **Run the Application**
-   ```bash
-   python app.py
-   ```
-
-   You should see output like:
-   ```
-   WARNING in app.runserver: This is a development server. Do not use it in production applications.
-    * Running on http://127.0.0.1:5000
-   ```
-
-#### 6. **Open in Browser**
-   - Go to `http://localhost:5000` in your web browser
-   - The calculator should load with a beautiful purple gradient background
+Applications:
+- Experimental measurements
+- Numerical accuracy estimation
+- Computational error evaluation
 
 ---
 
-## 📁 Project Structure
-```
-project-folder/
-├── app.py                 # Main Flask application
-├── requirements.txt       # Python dependencies
-├── README.md             # This file
-└── templates/
-    └── index.html        # Frontend HTML/CSS/JS
-```
+## Root Finding Methods
+Implemented numerical methods:
+- Bisection Method
+- Newton-Raphson Method
+- False Position Method
+
+Example equation:
+x² - 2 = 0
+
+Approximate root:
+√2 = 1.4142
+
+Newton-Raphson iteration:
+
+x(n+1) = x(n) - f(xn)/f'(xn)
 
 ---
 
-## 🧮 How to Use
-
-### Basic Calculator
-1. Enter a mathematical expression (e.g., `sin(pi/4) + 2*sqrt(9)`)
-2. Click "Calculate" button
-3. View the result
-
-**Supported Functions:**
-- Trigonometric: sin, cos, tan, asin, acos, atan
-- Hyperbolic: sinh, cosh, tanh
-- Exponential/Logarithmic: exp, log, log10, sqrt
-- Other: abs, factorial
-- Constants: pi, e
-
-### Error Analysis
-1. Select analysis type from dropdown
-2. Enter required values (true value, approximate value, etc.)
-3. Click "Analyze Error" button
-4. View the calculated error with formula explanation
-
-### Root Finding Methods
-Choose one of three methods to find roots of equations:
-
-**Bisection Method:**
-- Function: e.g., `x**3 - 4*x + 1`
-- Interval: [a, b] where f(a) and f(b) have opposite signs
-- Most reliable method, slower convergence
-
-**Newton-Raphson Method:**
-- Function: e.g., `x**2 - 2`
-- Derivative: e.g., `2*x`
-- Initial guess: x₀
-- Fastest convergence, needs derivative
-
-**False Position Method:**
-- Function: e.g., `x**3 - 4*x + 1`
-- Interval: [a, b]
-- Faster than bisection, uses secant line
+## Technologies Used
+- Python
+- HTML/CSS
+- JavaScript
+- Flask (if applicable)
+- Numerical Methods Algorithms
 
 ---
 
-## 📊 Example Problems
+## Project Objective
+To integrate:
+- Scientific computation
+- Numerical error analysis
+- Root-finding algorithms
 
-### Example 1: Find square root of 2
-- **Method:** Newton-Raphson
-- **Function:** `x**2 - 2`
-- **Derivative:** `2*x`
-- **Initial Guess:** 1
-- **Expected Root:** 1.41421356...
-
-### Example 2: Find root of cubic
-- **Method:** Bisection
-- **Function:** `x**3 - 4*x + 1`
-- **Interval:** [0, 2]
-- **Expected Root:** ~1.860288...
-
-### Example 3: Error Analysis
-- **True Value:** 3.14159265359
-- **Approximate Value:** 3.14
-- **Type:** Percentage Error
-- **Expected Error:** ~0.0051% (very small!)
+into a single interactive web-based tool.
 
 ---
 
-## 🔧 Troubleshooting
-
-### Port 5000 already in use
-If port 5000 is busy, modify `app.py`:
-```python
-if __name__ == '__main__':
-    app.run(debug=True, port=5001)  # Change 5000 to 5001
-```
-
-### "ModuleNotFoundError: No module named 'flask'"
-Make sure you:
-1. Activated virtual environment
-2. Ran `pip install -r requirements.txt`
-3. Installed in the correct environment
-
-### Browser shows "Cannot reach server"
-1. Check terminal shows "Running on http://127.0.0.1:5000"
-2. Ensure terminal is still running (don't close it)
-3. Try refreshing browser or clearing cache
-
-### CORS errors in console
-This is handled by Flask-CORS. If issues persist, ensure:
-1. Flask-CORS is installed: `pip install Flask-CORS`
-2. `from flask_cors import CORS` is in app.py
-3. `CORS(app)` is called after creating Flask app
+## Applications
+- Engineering computations
+- Numerical methods learning
+- Error estimation analysis
+- Academic and educational use
 
 ---
-
-## 📝 Mathematical Formulas Used
-
-### Error Analysis Formulas
-- **Absolute Error:** |True Value - Approximate Value|
-- **Relative Error:** |True Value - Approx Value| / |True Value|
-- **Percentage Error:** Relative Error × 100%
-- **Round-off Error:** |Original Value - Rounded Value|
-- **Error Propagation:** √(Σ(∂f/∂x_i × δx_i)²)
-
-### Numerical Methods Formulas
-- **Bisection:** c = (a + b) / 2
-- **Newton-Raphson:** x_{n+1} = x_n - f(x_n)/f'(x_n)
-- **False Position:** c = (a×f(b) - b×f(a)) / (f(b) - f(a))
-
----
-
-## 📚 Concepts Covered
-
-### Numerical Methods
-- Root finding algorithms
-- Convergence analysis
-- Bracketing vs. open methods
-- Iteration and tolerance
-
-### Error Analysis
-- Types of errors (absolute, relative, percentage)
-- Round-off errors
-- Truncation errors
-- Error propagation and accumulation
-
-### Programming Concepts
-- Python functions and classes
-- REST API design
-- Client-server architecture
-- Frontend-backend communication
-
----
-
-## 🎯 For Your Assignment/Presentation
-
-### What to Show:
-1. **Functionality:** Run different calculations and show results
-2. **Error Analysis:** Demonstrate error calculations with different values
-3. **Numerical Methods:** Show convergence of different root-finding methods
-4. **Code Quality:** Show clean, well-commented code structure
-5. **UI/UX:** Highlight the professional, responsive interface
-
-### What to Explain:
-1. Why each error type matters in numerical computing
-2. When to use each root-finding method
-3. How convergence works and why tolerance matters
-4. Trade-offs between methods (speed vs. reliability)
-5. Real-world applications of numerical methods
-
----
-
-## 🚀 Enhancement Ideas (Optional)
-
-1. Add more numerical methods:
-   - Secant Method
-   - Simpson's Rule (Integration)
-   - Gaussian Elimination (Linear Systems)
-
-2. Add graphing capabilities:
-   - Plot functions
-   - Visualize convergence
-
-3. Add matrix operations:
-   - Matrix multiplication
-   - Determinant calculation
-   - System of linear equations solver
-
-4. Improve UI:
-   - Dark mode
-   - History of calculations
-   - Export results as PDF
-
-5. Add documentation:
-   - Step-by-step explanations
-   - Video tutorials
-   - Theory behind each method
-
----
-
-## 📞 Notes for Submission
-
-- Keep the code clean and well-commented
-- Include this README in your submission
-- Test thoroughly before presenting
-- Have example inputs ready for demo
-- Explain the error analysis importance
-- Show different method behaviors
-
----
-
-## ⚖️ License
-Educational project for BE CSE Numerical Methods subject.
-
----
-
-**Created:** 2024
-**Purpose:** Demonstrate numerical methods and error analysis concepts
-**Difficulty Level:** Mid-level (suitable for 3rd year BE CSE)
-
-Good luck with your project! 🎓
