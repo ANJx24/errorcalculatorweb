@@ -1,19 +1,33 @@
 # 🧮 Scientific Calculator with Error Analysis & Numerical Methods
 
-A modern web-based scientific calculator that combines advanced mathematical computations with numerical methods and error analysis. Designed for students, engineers, and researchers to perform scientific calculations and study numerical algorithms through an interactive interface.
+A modern web-based scientific calculator that combines advanced mathematical computations, error analysis, and numerical root-finding algorithms into one interactive application.
+
+## 📸 Project Preview
+
+> Replace `project-preview.png` with your actual screenshot file.
+
+![Project Preview](project-preview.png)
 
 ---
 
 ## 🚀 Live Demo
 
-🌐 **https://anjx24.github.io/errorcalculatorweb/**
+🌐 **[Open Live Demo](https://anjx24.github.io/errorcalculatorweb/)**
 
+---
+
+## 📖 Overview
+
+This project integrates standard scientific calculations with numerical methods and error analysis techniques commonly used in engineering and computational mathematics.
+
+It provides an intuitive interface for performing complex calculations while helping users understand computational accuracy and numerical algorithms.
 
 ---
 
 ## ✨ Features
 
 ### 🧮 Scientific Calculator
+
 - ➕ Basic arithmetic operations
 - 📐 Trigonometric functions (`sin`, `cos`, `tan`)
 - 📊 Logarithmic and exponential functions
@@ -31,18 +45,21 @@ sin(pi/4) + 2 * sqrt(9)
 
 ### 📉 Error Analysis
 
+Supports:
+
 - 📏 Absolute Error
 - 📐 Relative Error
 - 💯 Percentage Error
 - 🔬 Error Propagation Analysis
 
-Error propagation formula:
+Formula:
 
 ```text
 ΔR = √[(∂R/∂x · Δx)² + (∂R/∂y · Δy)²]
 ```
 
-Applications include:
+Applications:
+
 - Experimental measurements
 - Numerical accuracy estimation
 - Computational error evaluation
@@ -51,21 +68,19 @@ Applications include:
 
 ### 📌 Root Finding Methods
 
-Implemented numerical algorithms:
+Implemented algorithms:
 
 - 🔹 Bisection Method
 - 🔹 Newton-Raphson Method
 - 🔹 False Position Method
 
-Example equation:
+Example:
 
 ```text
+Equation:
 x² - 2 = 0
-```
 
-Approximate root:
-
-```text
+Approximate Root:
 √2 ≈ 1.4142
 ```
 
@@ -81,43 +96,44 @@ x(n+1) = x(n) - f(xn) / f'(xn)
 
 ### Frontend
 
-<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
-<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
+- 🌐 HTML5
+- 🎨 CSS3
+- ⚡ JavaScript
 
 ### Backend
 
-<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-<img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" />
+- 🐍 Python
+- 🌶️ Flask
 
 ### Tools
 
-<img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" />
-<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" />
-<img src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white" />
+- 🔧 Git
+- 🐙 GitHub
+- 💻 VS Code
+
 ---
 
-## 📂 Installation
+## 📦 Installation
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/ANJx24/your-repository-name.git
+git clone https://github.com/ANJx24/errorcalculatorweb.git
 ```
 
-Navigate to the project:
+Navigate into the project:
 
 ```bash
-cd your-repository-name
+cd errorcalculatorweb
 ```
 
-Install dependencies (if applicable):
+Install dependencies (if required):
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the application:
+Run the project:
 
 ```bash
 python app.py
@@ -128,19 +144,25 @@ python app.py
 ## 🎯 Project Objectives
 
 - 🧮 Perform scientific computations
-- 📉 Analyze numerical and measurement errors
-- 📌 Solve equations using root-finding algorithms
-- 🎓 Support learning in numerical methods and engineering mathematics
+- 📉 Analyze numerical errors
+- 📌 Solve equations using numerical methods
+- 🎓 Support engineering and mathematics education
 
 ---
 
 ## 🌍 Applications
 
-- 🏗️ Engineering computations
-- 🎓 Academic and educational use
-- 📊 Numerical methods learning
-- 🔬 Scientific analysis
-- 📐 Error estimation and uncertainty calculations
+- 🏗️ Engineering calculations
+- 📚 Academic learning
+- 📊 Numerical methods practice
+- 🔬 Scientific research
+- 📐 Error estimation and analysis
+
+---
+
+## 📂 GitHub Repository
+
+🔗 **https://github.com/ANJx24/errorcalculatorweb**
 
 ---
 
@@ -148,11 +170,11 @@ python app.py
 
 **Anuj Jha**
 
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ANJx24)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/anuj-jha-86682a28b/)
+- 🐙 GitHub: https://github.com/ANJx24
+- 💼 LinkedIn: https://www.linkedin.com/in/anuj-jha-86682a28b/
 
 ---
 
 ## ⭐ Support
 
-If you found this project useful, consider giving it a ⭐ on GitHub.
+If you found this project useful, consider giving it a ⭐ on GitHub!
